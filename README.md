@@ -1,2 +1,3 @@
 # Utils
-a repo of small utils that i sometimes use
+
+## A Small collection of basic utilities that i sometimes use
