@@ -1,0 +1,12 @@
+{
+    "name": "bob",
+    "username": "bobsurUncle",
+    "family": {
+        "father": "joe",
+        "mother": "susan",
+        "sister": "jane",
+        "other":{
+            "aunt": "jill"
+        }
+    }
+}

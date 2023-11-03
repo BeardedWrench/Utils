@@ -1,0 +1,9 @@
+{
+    "name": "bob",
+    "family": {
+        "father": "joe",
+        "mother": "susan"
+    },
+    "familyName": "robert",
+    "age": 40
+}
