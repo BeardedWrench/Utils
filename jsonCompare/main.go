@@ -57,7 +57,6 @@ func findDifferences(keys1, keys2 map[string]int) (diffs []Difference) {
 }
 
 func colorPrint(format string, args []interface{}, color string) {
-	// Choose the color based on the input
 	var colorCode string
 	switch color {
 	case "green":
@@ -67,10 +66,9 @@ func colorPrint(format string, args []interface{}, color string) {
 	case "blue":
 		colorCode = colorBlue
 	default:
-		colorCode = colorReset // Default to no color if an unrecognized color is specified
+		colorCode = colorReset
 	}
 
-	// Print the string in the chosen color
 	fmt.Printf(colorCode+format+colorReset, args...)
 }
 
