@@ -17,6 +17,13 @@ type Difference struct {
 	Key  string
 }
 
+const (
+	colorRed    = "\033[91m"
+	colorGreen  = "\033[92m"
+	colorBlue   = "\033[94m"
+	colorReset  = "\033[0m"
+)
+
 func extractKeys(filename string) (map[string]int, error) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -49,16 +56,36 @@ func findDifferences(keys1, keys2 map[string]int) (diffs []Difference) {
 	return diffs
 }
 
+func colorPrint(format string, args []interface{}, color string) {
+	// Choose the color based on the input
+	var colorCode string
+	switch color {
+	case "green":
+		colorCode = colorGreen
+	case "red":
+		colorCode = colorRed
+	case "blue":
+		colorCode = colorBlue
+	default:
+		colorCode = colorReset // Default to no color if an unrecognized color is specified
+	}
+
+	// Print the string in the chosen color
+	fmt.Printf(colorCode+format+colorReset, args...)
+}
+
 func printDifferences(diffs []Difference, filename string) {
 	if len(diffs) == 0 {
-		fmt.Printf("\033[32mNo difference found in %s\033[0m\n", filename)
+		colorPrint("No difference found in %s\n", []interface{}{filename}, "green")
 		return
 	}
 
-	fmt.Printf("____________\n| %s |\n|---------------------|\n| line | difference   |\n|---------------------|\n", filename)
+	colorPrint("____________\n| %s |\n|---------------------|\n| line | difference   |\n|---------------------|\n", []interface{}{filename}, "red")
+
 	for _, diff := range diffs {
-		fmt.Printf("| %4d | %-13q \n|---------------------|\n", diff.Line, diff.Key)
+		colorPrint("| %4d | %-13q \n|---------------------|\n", []interface{}{diff.Line, diff.Key}, "red")
 	}
+
 	fmt.Println()
 }
 
@@ -76,7 +103,7 @@ func writeDifferencesToFile(file *os.File, diffs []Difference, filename string) 
 
 func main() {
 	if len(os.Args) != 3 {
-		fmt.Println("Usage: go run script.go file1.json file2.json")
+		colorPrint("Usage: go run main.go file1.json file2.json\n", nil, "red")
 		return
 	}
 
@@ -85,7 +112,7 @@ func main() {
 	keys2, err2 := extractKeys(file2)
 
 	if err1 != nil || err2 != nil {
-		fmt.Printf("Error reading files: %v, %v\n", err1, err2)
+		colorPrint("Error reading files: %v, %v\n", []interface{}{err1, err2}, "red")
 		return
 	}
 
@@ -106,7 +133,7 @@ func main() {
 		filename := fmt.Sprintf("%s-%s-differences-%s.txt", baseFile1, baseFile2, timestamp)
 		file, err := os.Create(filename)
 		if err != nil {
-			fmt.Printf("Error creating file: %s\n", err)
+			colorPrint("Error creating file: %s\n", []interface{}{err}, "red")
 			return
 		}
 		defer file.Close()
@@ -114,7 +141,7 @@ func main() {
 		writeDifferencesToFile(file, diffs1, file1)
 		writeDifferencesToFile(file, diffs2, file2)
 
-		fmt.Printf("\033[31mDifferences found and exported to %s\033[0m\n", filename)
+		colorPrint("Differences found and exported to %s\n", []interface{}{filename}, "red")
 	} else {
 		printDifferences(diffs1, file1)
 		printDifferences(diffs2, file2)
