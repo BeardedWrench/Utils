@@ -18,10 +18,10 @@ Options:
 
 Commands:
   list                   List all tasks
-  add <taskDescription>  Add a new task
+  add <taskDescription>  Add a new task - (Description should be wrapped in quotes.)
   complete <taskId>      Mark a task as complete
   save                   Archive all tasks and start with a new list
-  archive                List all archived task files
-  view <fileIndex>       View tasks from an archived file using the index
+  archive                List all archived task files with index
+  view <index>           View tasks from an archived file using index
   help [command]         display help for command
 ```

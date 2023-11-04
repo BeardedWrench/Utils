@@ -42,7 +42,7 @@ const archiveTasks = (filename) => {
     archivedOn: timestamp,
     tasks: tasksToArchive
   }, null, 2));
-  
+
   if (!filename) {
     saveTasks([]);
   }
@@ -63,7 +63,7 @@ program
 
 program
   .command('add <taskDescription>')
-  .description('Add a new task')
+  .description('Add a new task - (Description should be wrapped in quotes.)')
   .action((taskDescription) => {
     const tasks = loadTasks();
     tasks.push({ id: tasks.length + 1, description: taskDescription, status: 'TODO' });
@@ -82,7 +82,7 @@ program
       saveTasks(tasks);
       console.log(chalk.greenBright(`Task ${taskId} marked as complete`));
       if (tasks.every(task => task.status === 'COMPLETE')) {
-        archiveTasks(); 
+        archiveTasks();
       }
     } else {
       console.log(chalk.red(`Task with id ${taskId} not found.`));
@@ -93,7 +93,7 @@ program
   .command('save')
   .description('Archive all tasks and start with a new list')
   .action(() => {
-    archiveTasks(); 
+    archiveTasks();
   });
 
 program
@@ -107,7 +107,7 @@ program
       console.log(chalk.red('Command: task view <index>'));
       console.log(chalk.blueBright('Archived Tasks Files:'));
       files.forEach((file, index) => {
-        console.log(chalk.greenBright(index) + ':'+ chalk.magentaBright(file));
+        console.log(chalk.greenBright(index) + ':' + chalk.magentaBright(file));
       });
     }
   });
@@ -125,7 +125,7 @@ program
       const archiveDate = JSON.parse(archivedContent).archivedOn;
       console.log(chalk.red(`Archived On ${archiveDate}`));
       console.log(chalk.blueBright(`Tasks from ${chosenFile}:`));
-      
+
       tasks.forEach((task, index) => {
         console.log(chalk.magentaBright(`${index + 1}: ${task.status} - ${task.description}`))
       })
