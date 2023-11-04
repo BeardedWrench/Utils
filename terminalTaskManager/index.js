@@ -1,17 +1,25 @@
 #!/usr/bin/env node
 
+import os from 'os';
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import { program } from 'commander';
 
-const tasksDirectory = './tasks';
+const homePath = os.homedir();
+const baseDirectory = path.join(homePath, 'config', 'scripts', 'terminalTaskManager');
+const tasksDirectory = path.join(baseDirectory, 'tasks');
 const archiveDirectory = path.join(tasksDirectory, 'archive');
 const tasksFile = path.join(tasksDirectory, 'tasks.json');
+
+if (!fs.existsSync(baseDirectory)) {
+  fs.mkdirSync(baseDirectory, { recursive: true });
+}
 
 if (!fs.existsSync(tasksDirectory)) {
   fs.mkdirSync(tasksDirectory, { recursive: true });
 }
+
 if (!fs.existsSync(archiveDirectory)) {
   fs.mkdirSync(archiveDirectory, { recursive: true });
 }
@@ -42,7 +50,7 @@ const archiveTasks = (filename) => {
     archivedOn: timestamp,
     tasks: tasksToArchive
   }, null, 2));
-
+  
   if (!filename) {
     saveTasks([]);
   }
@@ -82,7 +90,7 @@ program
       saveTasks(tasks);
       console.log(chalk.greenBright(`Task ${taskId} marked as complete`));
       if (tasks.every(task => task.status === 'COMPLETE')) {
-        archiveTasks();
+        archiveTasks(); 
       }
     } else {
       console.log(chalk.red(`Task with id ${taskId} not found.`));
@@ -93,7 +101,7 @@ program
   .command('save')
   .description('Archive all tasks and start with a new list')
   .action(() => {
-    archiveTasks();
+    archiveTasks(); 
   });
 
 program
@@ -107,13 +115,13 @@ program
       console.log(chalk.red('Command: task view <index>'));
       console.log(chalk.blueBright('Archived Tasks Files:'));
       files.forEach((file, index) => {
-        console.log(chalk.greenBright(index) + ':' + chalk.magentaBright(file));
+        console.log(chalk.greenBright(index) + ':'+ chalk.magentaBright(file));
       });
     }
   });
 
 program
-  .command('view <fileIndex>')
+  .command('view <index>')
   .description('View tasks from an archived file using index')
   .action((fileIndex) => {
     const files = fs.readdirSync(archiveDirectory).filter(file => file.startsWith('tasks-') && file.endsWith('.json'));
@@ -125,7 +133,7 @@ program
       const archiveDate = JSON.parse(archivedContent).archivedOn;
       console.log(chalk.red(`Archived On ${archiveDate}`));
       console.log(chalk.blueBright(`Tasks from ${chosenFile}:`));
-
+      
       tasks.forEach((task, index) => {
         console.log(chalk.magentaBright(`${index + 1}: ${task.status} - ${task.description}`))
       })
