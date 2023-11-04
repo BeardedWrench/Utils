@@ -9,6 +9,12 @@ A simple task manager / todo list for your terminal.
 - run `npm link`
 - Profit. begin using the app inside your terminal.
 
+### Usage
+- `task add "Finish Grocery Shopping` will add a new task to the current task list.
+
+Note: If all tasks are marked complete, we automatically archive that task file and start fresh.
+
+
 ### Commands
 ```
 Usage: task [command]
